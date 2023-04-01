@@ -2,28 +2,22 @@ package com.ky.android.photo
 
 import android.app.Activity
 import android.content.Intent
-import android.graphics.drawable.Drawable
 import android.os.Bundle
-import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentPagerAdapter
 import com.ky.android.photo.config.ImagePreviewConfig
-import com.ky.android.photo.widget.DragDiootoView
-import me.panpf.sketch.Sketch
-import me.panpf.sketch.SketchImageView
-import me.panpf.sketch.decode.ImageAttrs
-import me.panpf.sketch.request.*
-import java.security.AccessController.getContext
+import com.ky.android.photo.databinding.ActivityImagePreviewBinding
 
 class ImagePreviewActivity : AppCompatActivity() {
+    private var _binding: ActivityImagePreviewBinding? = null
     private var imageConfig: ImagePreviewConfig? = null
-    private var dragDiootoView: DragDiootoView? = null
-    private var sketchImageView: SketchImageView? = null
-    private var visible = true;
-    private var hasCache = false
-    private var loadRequest: LoadRequest? = null
+    private var fragmentList: MutableList<ImagePreviewFragment>? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_image_preview)
+        _binding = ActivityImagePreviewBinding.inflate(layoutInflater)
+        setContentView(_binding?.root)
         initIntent()
         initViews()
     }
@@ -33,55 +27,30 @@ class ImagePreviewActivity : AppCompatActivity() {
     }
 
     private fun initViews() {
-        dragDiootoView = findViewById(R.id.dragDiootoView)
-        sketchImageView = SketchImageView(this)
-        sketchImageView?.options?.isDecodeGifImage = true
-        sketchImageView?.isZoomEnabled = true
-        dragDiootoView?.addContentChildView(sketchImageView)
-        sketchImageView?.zoomer?.blockDisplayer?.setPause(visible)
-
-
-        dragDiootoView?.setOnShowFinishListener { dragDiootoView, showImmediately -> loadImage() }
-        dragDiootoView?.setOnDragListener { view, moveX, moveY -> }
-
-        if (hasCache) {
-            loadImage()
-        } else {
-            dragDiootoView?.putData(
-                imageConfig!!.originModel!!.getLeft(),
-                imageConfig!!.originModel!!.getTop(),
-                imageConfig!!.originModel!!.getWidth(),
-                imageConfig!!.originModel!!.getHeight()
-            )
-            //如果显示的点击的position  则进行动画处理
-            dragDiootoView?.show(false)
+        val currentPosition: Int? = imageConfig?.position
+        val imageUrls: MutableList<String>? = imageConfig?.imgUrls
+        fragmentList = mutableListOf()
+        for (index in imageUrls?.indices!!) {
+            val imageFragment: ImagePreviewFragment = ImagePreviewFragment.newInstance()
+            imageFragment.arguments = Bundle().apply {
+                putParcelable("config", imageConfig?.originModel)
+                putString("url", imageUrls[index])
+                putInt("position", index)
+            }
+            fragmentList?.add(imageFragment)
         }
-
-        dragDiootoView?.setOnFinishListener(object : DragDiootoView.OnFinishListener {
-            override fun callFinish() {
-                finish()
+        _binding?.viewPager?.adapter = object : FragmentPagerAdapter(supportFragmentManager) {
+            override fun getItem(position: Int): Fragment {
+                return fragmentList!![position]
             }
 
-        })
-        dragDiootoView?.setOnReleaseListener(object : DragDiootoView.OnReleaseListener {
-            override fun onRelease(isToMax: Boolean, isToMin: Boolean) {
-
+            override fun getCount(): Int {
+                return fragmentList!!.size
             }
-
-        })
-
-        dragDiootoView?.setOnClickListener(object : DragDiootoView.OnClickListener {
-            override fun onClick(dragDiootoView: DragDiootoView?) {
-                dragDiootoView?.backToMin()
-            }
-
-        })
-
-    }
-
-    override fun setVisible(visible: Boolean) {
-        super.setVisible(visible)
-        this.visible = visible
+        }
+        if (currentPosition != null) {
+            _binding?.viewPager?.currentItem = currentPosition
+        }
     }
 
     companion object {
@@ -93,87 +62,6 @@ class ImagePreviewActivity : AppCompatActivity() {
             activity.overridePendingTransition(0, 0)
         }
     }
-
-    /**
-     * 由于图片框架原因  这里需要使用两种不同的加载方式
-     * 如果有缓存  直接可显示
-     * 如果没缓存 则需要等待加载完毕  才能够将图片显示在view上
-     */
-    private fun loadImage() {
-        if (getContext() == null || sketchImageView == null) {
-            return
-        }
-        if (hasCache) {
-            loadWithCache()
-        } else {
-            loadWithoutCache()
-        }
-    }
-
-    private fun loadWithCache() {
-        sketchImageView!!.displayListener = object : DisplayListener {
-            override fun onStarted() {
-
-            }
-
-            override fun onCompleted(
-                drawable: Drawable,
-                imageFrom: ImageFrom,
-                imageAttrs: ImageAttrs
-            ) {
-                val w = drawable.intrinsicWidth
-                val h = drawable.intrinsicHeight
-                //如果有缓存  直接将大小变为最终大小而不是去调用notifySize来更新 并且是直接显示不进行动画
-                dragDiootoView!!.putData(
-                    imageConfig!!.originModel!!.getLeft(), imageConfig!!.originModel!!.getTop(),
-                    imageConfig!!.originModel!!.getWidth(), imageConfig!!.originModel!!.getHeight(),
-                    w, h
-                )
-                dragDiootoView!!.show(false)
-            }
-
-            override fun onError(cause: ErrorCause) {
-
-            }
-
-            override fun onCanceled(cause: CancelCause) {}
-        }
-        sketchImageView!!.downloadProgressListener =
-            DownloadProgressListener { totalLength, completedLength ->
-
-            }
-        imageConfig?.imgUrl?.let { sketchImageView?.displayImage(it) }
-    }
-
-    private fun loadWithoutCache() {
-        loadRequest = imageConfig?.imgUrl?.let {
-            Sketch.with(this).load(it, object : LoadListener {
-                override fun onStarted() {
-
-                }
-
-                override fun onCompleted(result: LoadResult) {
-                    if (result.gifDrawable != null) {
-                        result.gifDrawable.followPageVisible(true, true)
-                    }
-                    val w = result.bitmap.width
-                    val h = result.bitmap.height
-                    dragDiootoView!!.notifySize(w, h)
-                    sketchImageView!!.displayImage(imageConfig?.imgUrl!!)
-                    hasCache = true
-                }
-
-                override fun onError(cause: ErrorCause) {
-
-                }
-
-                override fun onCanceled(cause: CancelCause) {}
-            }).downloadProgressListener { totalLength, completedLength ->
-
-            }.commit()
-        }
-    }
-
 
     override fun finish() {
         super.finish()

@@ -8,10 +8,13 @@ import android.view.View;
 import com.ky.android.photo.config.ContentViewOriginModel;
 import com.ky.android.photo.config.ImagePreviewConfig;
 
+import java.util.List;
+
 public class ImagePreviewHelper {
 
-    private String url;
+    private List<String> urls;
     private ContentViewOriginModel originModel;
+    private int position;
 
 
     public static ImagePreviewHelper with() {
@@ -19,16 +22,18 @@ public class ImagePreviewHelper {
     }
 
 
-    public ImagePreviewHelper url(String url) {
-        this.url = url;
+    public ImagePreviewHelper urls(List<String> urls) {
+        this.urls = urls;
         return this;
     }
 
     public ImagePreviewHelper view(View view) {
+        int screenWidth = view.getContext().getResources().getDisplayMetrics().widthPixels;
+        int screenHeight = view.getContext().getResources().getDisplayMetrics().heightPixels;
         originModel = new ContentViewOriginModel();
         if (view == null) {
-            originModel.left = 0;
-            originModel.top = 0;
+            originModel.left = screenWidth / 2;
+            originModel.top = screenHeight / 2;
             originModel.width = 0;
             originModel.height = 0;
         } else {
@@ -36,16 +41,17 @@ public class ImagePreviewHelper {
             view.getLocationOnScreen(location);
             originModel.left = location[0];
             originModel.top = location[1];
-//            originModel.width = view.getWidth();
-//            originModel.height = view.getHeight();
+            originModel.width = view.getWidth();
+            originModel.height = view.getHeight();
         }
         return this;
     }
 
     public void start(Context context) {
         ImagePreviewConfig config = new ImagePreviewConfig();
-        config.setImgUrl(url);
+        config.setImgUrls(urls);
         config.setOriginModel(originModel);
+        config.setPosition(position);
         ImagePreviewActivity.start(scanForActivity(context), config);
     }
 
@@ -58,5 +64,10 @@ public class ImagePreviewHelper {
             return scanForActivity(((ContextWrapper) context).getBaseContext());
         }
         return null;
+    }
+
+    public ImagePreviewHelper position(int position) {
+        this.position = position;
+        return this;
     }
 }

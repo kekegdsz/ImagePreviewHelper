@@ -8,6 +8,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.ky.android.photo.ImagePreviewHelper;
 
+import java.util.Arrays;
+
 import me.panpf.sketch.SketchImageView;
 
 public class GridAdapter extends RecyclerView.Adapter<GridAdapter.MyViewHolder> {
@@ -45,7 +47,8 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.MyViewHolder> 
         holder.srcImageView.setOnClickListener(srcView -> {
             ImagePreviewHelper
                     .with()
-                    .url(normalImageUlr[position])
+                    .urls(Arrays.asList(normalImageUlr))
+                    .position(position)
                     .view(srcView)
                     .start(srcView.getContext());
         });

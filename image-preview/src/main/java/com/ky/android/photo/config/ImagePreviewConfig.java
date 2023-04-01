@@ -3,34 +3,32 @@ package com.ky.android.photo.config;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.List;
+
 public class ImagePreviewConfig implements Parcelable {
 
-    private String imgUrl;
+    private List<String> imgUrls;
 
     private ContentViewOriginModel originModel;
 
-    public ImagePreviewConfig() {
-    }
-
-    public String getImgUrl() {
-        return imgUrl;
-    }
-
-    public void setImgUrl(String imgUrl) {
-        this.imgUrl = imgUrl;
-    }
-
-    public ContentViewOriginModel getOriginModel() {
-        return originModel;
-    }
-
-    public void setOriginModel(ContentViewOriginModel originModel) {
-        this.originModel = originModel;
-    }
+    private int position;
 
     protected ImagePreviewConfig(Parcel in) {
-        imgUrl = in.readString();
+        imgUrls = in.createStringArrayList();
         originModel = in.readParcelable(ContentViewOriginModel.class.getClassLoader());
+        position = in.readInt();
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeStringList(imgUrls);
+        dest.writeParcelable(originModel, flags);
+        dest.writeInt(position);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
     }
 
     public static final Creator<ImagePreviewConfig> CREATOR = new Creator<ImagePreviewConfig>() {
@@ -45,14 +43,30 @@ public class ImagePreviewConfig implements Parcelable {
         }
     };
 
-    @Override
-    public int describeContents() {
-        return 0;
+    public List<String> getImgUrls() {
+        return imgUrls;
     }
 
-    @Override
-    public void writeToParcel(Parcel parcel, int i) {
-        parcel.writeString(imgUrl);
-        parcel.writeParcelable(originModel, i);
+    public void setImgUrls(List<String> imgUrls) {
+        this.imgUrls = imgUrls;
+    }
+
+    public int getPosition() {
+        return position;
+    }
+
+    public void setPosition(int position) {
+        this.position = position;
+    }
+
+    public ImagePreviewConfig() {
+    }
+
+    public ContentViewOriginModel getOriginModel() {
+        return originModel;
+    }
+
+    public void setOriginModel(ContentViewOriginModel originModel) {
+        this.originModel = originModel;
     }
 }
