@@ -1,14 +1,17 @@
 package com.ky.android.photo
 
+import android.graphics.Color
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import com.bumptech.glide.Glide
 import com.ky.android.photo.config.ContentViewOriginModel
 import com.ky.android.photo.databinding.FragmentImagePreviewBinding
-import me.panpf.sketch.request.DisplayRequest
+import com.ky.android.photo.widget.FingerDragLayout
 
 open class ImagePreviewFragment : Fragment() {
     private lateinit var _binding: FragmentImagePreviewBinding
@@ -34,6 +37,27 @@ open class ImagePreviewFragment : Fragment() {
     }
 
     private fun initViews() {
+        _binding.imageDetailFinger.setOnAlphaChangeListener {
+            val colorId = convertPercentToBlackAlphaColor(it)
+            _binding.imageDetailFinger.setBackgroundColor(colorId)
+        }
+        _binding.imageDetailFinger.setOnPageFinishListener {
+            activity?.finish()
+        }
+        _binding.photoView.setOnClickListener {
+            activity?.finish()
+        }
+        activity?.let {
+            Glide.with(it).load(url).into(_binding.photoView)
+        }
+    }
+
+    private fun convertPercentToBlackAlphaColor(alpha: Float): Int {
+        var percent = Math.min(1f, Math.max(0f, alpha))
+        val intAlpha = (percent * 255).toInt()
+        val stringAlpha = Integer.toHexString(intAlpha).toLowerCase()
+        val color = "#" + (if (stringAlpha.length < 2) "0" else "") + stringAlpha + "000000"
+        return Color.parseColor(color)
     }
 
     private fun isVisibleToUser(): Boolean {
