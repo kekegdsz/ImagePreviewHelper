@@ -1,14 +1,15 @@
 package com.ky.android.photo
 
-import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import com.danikula.videocache.HttpProxyCacheServer
 import com.ky.android.photo.config.ContentViewOriginModel
 import com.ky.android.photo.databinding.FragmentVideoBinding
+import com.ky.android.photo.util.cache.ProxyVideoCacheManager
 import xyz.doikki.videocontroller.StandardVideoController
 
 open class VideoFragment : Fragment() {
@@ -37,7 +38,9 @@ open class VideoFragment : Fragment() {
     }
 
     private fun initViews() {
-        _binding.player.setUrl(url) //设置视频地址
+        val cacheServer: HttpProxyCacheServer = ProxyVideoCacheManager.getProxy(activity)
+        val proxyUrl = cacheServer.getProxyUrl(url)
+        _binding.player.setUrl(proxyUrl) //设置视频地址
         val controller = context?.let { StandardVideoController(it) }
         controller?.addDefaultControlComponent("标题", false)
         _binding.player.setVideoController(controller) //设置控制器
