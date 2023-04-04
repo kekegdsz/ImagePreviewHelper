@@ -22,9 +22,9 @@ import com.ky.android.photo.widget.photoview.PhotoView;
  *
  * @Description: 一个辅助手指下滑拖动关闭图片的LinearLayout
  */
-public class FingerDragLayout extends LinearLayout {
+public class DragLayout extends LinearLayout {
 
-    private static final String TAG = FingerDragLayout.class.getSimpleName();
+    private static final String TAG = DragLayout.class.getSimpleName();
     private final static int MAX_EXIT_Y = 500;
     private final static float MAX_SCALE = 0.25f;
     private final static long DURATION = 200;
@@ -47,15 +47,15 @@ public class FingerDragLayout extends LinearLayout {
     private OnAlphaChangedListener mOnAlphaChangedListener;
     private OnPageFinishListener mOnPageFinishListener;
 
-    public FingerDragLayout(Context context) {
+    public DragLayout(Context context) {
         this(context, null);
     }
 
-    public FingerDragLayout(Context context, @Nullable AttributeSet attrs) {
+    public DragLayout(Context context, @Nullable AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public FingerDragLayout(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+    public DragLayout(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         initView(context, attrs, defStyleAttr);
     }
@@ -164,7 +164,7 @@ public class FingerDragLayout extends LinearLayout {
                 @Override
                 public void onAnimationUpdate(ValueAnimator animation) {
                     float fraction = (float) animation.getAnimatedValue();
-                    FingerDragLayout.this.setScrollY(-(int) fraction);
+                    DragLayout.this.setScrollY(-(int) fraction);
                 }
             });
             animDown.addListener(new Animator.AnimatorListener() {
@@ -194,7 +194,7 @@ public class FingerDragLayout extends LinearLayout {
                 @Override
                 public void onAnimationUpdate(ValueAnimator animation) {
                     float fraction = (float) animation.getAnimatedValue();
-                    FingerDragLayout.this.setScrollY(-(int) fraction);
+                    DragLayout.this.setScrollY(-(int) fraction);
                 }
             });
             animUp.addListener(new Animator.AnimatorListener() {
@@ -248,7 +248,7 @@ public class FingerDragLayout extends LinearLayout {
                     mTranslationX = (float) valueAnimator.getAnimatedValue();
                     mLastTranslationX = mTranslationX;
                     scale = Math.min(Math.max(1 - Math.abs(mTranslationX) / getHeight(), MAX_SCALE), 1);
-                    FingerDragLayout.this.setScrollX(-(int) mTranslationX);
+                    DragLayout.this.setScrollX(-(int) mTranslationX);
                     photoView.setScaleX(scale);
                     photoView.setScaleY(scale);
                 }
@@ -260,7 +260,7 @@ public class FingerDragLayout extends LinearLayout {
                 if (isAnimateY) {
                     mTranslationY = (float) valueAnimator.getAnimatedValue();
                     mLastTranslationY = mTranslationY;
-                    FingerDragLayout.this.setScrollY(-(int) mTranslationY);
+                    DragLayout.this.setScrollY(-(int) mTranslationY);
                 }
             }
         });

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.ky.android.photo.widget.FingerDragLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.ky.android.photo.widget.DragLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/image_detail_finger"
     android:layout_width="match_parent"
@@ -14,4 +14,4 @@
         android:layout_height="match_parent"
         android:scaleType="fitCenter" />
 
-</com.ky.android.photo.widget.FingerDragLayout>
+</com.ky.android.photo.widget.DragLayout>

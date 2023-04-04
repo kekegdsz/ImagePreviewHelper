@@ -1,7 +1,6 @@
 package com.ky.android.photo
 
 import android.graphics.Color
-import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -11,7 +10,6 @@ import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.ky.android.photo.config.ContentViewOriginModel
 import com.ky.android.photo.databinding.FragmentImagePreviewBinding
-import com.ky.android.photo.widget.FingerDragLayout
 
 open class ImagePreviewFragment : Fragment() {
     private lateinit var _binding: FragmentImagePreviewBinding
