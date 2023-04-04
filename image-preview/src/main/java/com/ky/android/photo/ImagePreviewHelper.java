@@ -1,18 +1,24 @@
 package com.ky.android.photo;
 
 import android.app.Activity;
+import android.app.Application;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.view.View;
 
+import com.ky.android.photo.bean.ImageModel;
 import com.ky.android.photo.config.ContentViewOriginModel;
 import com.ky.android.photo.config.ImagePreviewConfig;
 
 import java.util.List;
 
+import xyz.doikki.videoplayer.exo.ExoMediaPlayerFactory;
+import xyz.doikki.videoplayer.player.VideoViewConfig;
+import xyz.doikki.videoplayer.player.VideoViewManager;
+
 public class ImagePreviewHelper {
 
-    private List<String> urls;
+    private List<ImageModel> models;
     private ContentViewOriginModel originModel;
     private int position;
 
@@ -21,9 +27,16 @@ public class ImagePreviewHelper {
         return new ImagePreviewHelper();
     }
 
+    public static void init(Application app) {
+        VideoViewManager.setConfig(VideoViewConfig.newBuilder()
+                //使用ExoPlayer解码
+                .setPlayerFactory(ExoMediaPlayerFactory.create())
+                .build());
+    }
 
-    public ImagePreviewHelper urls(List<String> urls) {
-        this.urls = urls;
+
+    public ImagePreviewHelper setModels(List<ImageModel> models) {
+        this.models = models;
         return this;
     }
 
@@ -49,7 +62,7 @@ public class ImagePreviewHelper {
 
     public void start(Context context) {
         ImagePreviewConfig config = new ImagePreviewConfig();
-        config.setImgUrls(urls);
+        config.setModels(models);
         config.setOriginModel(originModel);
         config.setPosition(position);
         ImagePreviewActivity.start(scanForActivity(context), config);

@@ -3,25 +3,27 @@ package com.ky.android.photo.config;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.ky.android.photo.bean.ImageModel;
+
 import java.util.List;
 
 public class ImagePreviewConfig implements Parcelable {
 
-    private List<String> imgUrls;
+    private List<ImageModel> models;
 
     private ContentViewOriginModel originModel;
 
     private int position;
 
     protected ImagePreviewConfig(Parcel in) {
-        imgUrls = in.createStringArrayList();
+        models = in.createTypedArrayList(ImageModel.CREATOR);
         originModel = in.readParcelable(ContentViewOriginModel.class.getClassLoader());
         position = in.readInt();
     }
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeStringList(imgUrls);
+        dest.writeTypedList(models);
         dest.writeParcelable(originModel, flags);
         dest.writeInt(position);
     }
@@ -43,14 +45,6 @@ public class ImagePreviewConfig implements Parcelable {
         }
     };
 
-    public List<String> getImgUrls() {
-        return imgUrls;
-    }
-
-    public void setImgUrls(List<String> imgUrls) {
-        this.imgUrls = imgUrls;
-    }
-
     public int getPosition() {
         return position;
     }
@@ -68,5 +62,12 @@ public class ImagePreviewConfig implements Parcelable {
 
     public void setOriginModel(ContentViewOriginModel originModel) {
         this.originModel = originModel;
+    }
+    public List<ImageModel> getModels() {
+        return models;
+    }
+
+    public void setModels(List<ImageModel> models) {
+        this.models = models;
     }
 }

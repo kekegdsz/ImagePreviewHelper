@@ -6,13 +6,15 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentPagerAdapter
+import com.ky.android.photo.bean.ImageModel
 import com.ky.android.photo.config.ImagePreviewConfig
+import com.ky.android.photo.config.ImageType
 import com.ky.android.photo.databinding.ActivityImagePreviewBinding
 
 class ImagePreviewActivity : AppCompatActivity() {
     private var _binding: ActivityImagePreviewBinding? = null
     private var imageConfig: ImagePreviewConfig? = null
-    private var fragmentList: MutableList<ImagePreviewFragment>? = null
+    private var fragmentList: MutableList<Fragment>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,16 +30,27 @@ class ImagePreviewActivity : AppCompatActivity() {
 
     private fun initViews() {
         val currentPosition: Int? = imageConfig?.position
-        val imageUrls: MutableList<String>? = imageConfig?.imgUrls
+        val models: MutableList<ImageModel>? = imageConfig?.models
         fragmentList = mutableListOf()
-        for (index in imageUrls?.indices!!) {
-            val imageFragment: ImagePreviewFragment = ImagePreviewFragment.newInstance()
-            imageFragment.arguments = Bundle().apply {
-                putParcelable("config", imageConfig?.originModel)
-                putString("url", imageUrls[index])
-                putInt("position", index)
+        for (index in models?.indices!!) {
+            val type = models[index].type
+            if (type == ImageType.IMAGE) {
+                val imageFragment: ImagePreviewFragment = ImagePreviewFragment.newInstance()
+                imageFragment.arguments = Bundle().apply {
+                    putParcelable("config", imageConfig?.originModel)
+                    putString("url", models[index].url)
+                    putInt("position", index)
+                }
+                fragmentList?.add(imageFragment)
+            } else if (type == ImageType.VIDEO) {
+                val videoFragment: VideoFragment = VideoFragment.newInstance()
+                videoFragment.arguments = Bundle().apply {
+                    putParcelable("config", imageConfig?.originModel)
+                    putString("url", models[index].url)
+                    putInt("position", index)
+                }
+                fragmentList?.add(videoFragment)
             }
-            fragmentList?.add(imageFragment)
         }
         _binding?.viewPager?.adapter = object : FragmentPagerAdapter(supportFragmentManager) {
             override fun getItem(position: Int): Fragment {
