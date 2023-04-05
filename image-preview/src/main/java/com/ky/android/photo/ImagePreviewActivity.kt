@@ -19,11 +19,8 @@ import com.liulishuo.okdownload.DownloadTask
 import com.liulishuo.okdownload.core.breakpoint.BreakpointInfo
 import com.liulishuo.okdownload.core.cause.EndCause
 import com.liulishuo.okdownload.core.cause.ResumeFailedCause
-import com.liulishuo.okdownload.kotlin.enqueue4
 import com.liulishuo.okdownload.kotlin.enqueue4WithSpeed
-import com.liulishuo.okdownload.kotlin.listener.onConnectStart
 import com.tbruyelle.rxpermissions3.RxPermissions
-import java.lang.Exception
 import java.util.*
 
 
