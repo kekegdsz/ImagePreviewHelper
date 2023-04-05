@@ -8,7 +8,7 @@ import com.ky.android.photo.config.ImageType;
 public class ImageModel implements Parcelable {
 
     private String url;
-    private String coverImgUrl;
+    private String thumb;
     private int type = ImageType.IMAGE;
 
 
@@ -19,20 +19,20 @@ public class ImageModel implements Parcelable {
 
     public ImageModel(String url, String coverImgUrl, int type) {
         this.url = url;
-        this.coverImgUrl = coverImgUrl;
+        this.thumb = coverImgUrl;
         this.type = type;
     }
 
     protected ImageModel(Parcel in) {
         url = in.readString();
-        coverImgUrl = in.readString();
+        thumb = in.readString();
         type = in.readInt();
     }
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(url);
-        dest.writeString(coverImgUrl);
+        dest.writeString(thumb);
         dest.writeInt(type);
     }
 
@@ -61,12 +61,12 @@ public class ImageModel implements Parcelable {
         this.url = url;
     }
 
-    public String getCoverImgUrl() {
-        return coverImgUrl;
+    public String getThumb() {
+        return thumb;
     }
 
-    public void setCoverImgUrl(String coverImgUrl) {
-        this.coverImgUrl = coverImgUrl;
+    public void setThumb(String thumb) {
+        this.thumb = thumb;
     }
 
     public int getType() {

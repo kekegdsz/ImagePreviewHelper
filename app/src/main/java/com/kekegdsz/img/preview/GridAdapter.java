@@ -11,7 +11,6 @@ import com.ky.android.photo.bean.ImageModel;
 import com.ky.android.photo.config.ImageType;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import me.panpf.sketch.SketchImageView;
@@ -70,7 +69,7 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.MyViewHolder> 
 
     @Override
     public void onBindViewHolder(final MyViewHolder holder, final int position) {
-        holder.srcImageView.displayImage(models.get(position).getCoverImgUrl());
+        holder.srcImageView.displayImage(models.get(position).getThumb());
         holder.srcImageView.setShowGifFlagEnabled(R.drawable.ic_gif);
         holder.srcImageView.setOnClickListener(srcView -> {
             ImagePreviewHelper

@@ -15,7 +15,6 @@ import android.widget.LinearLayout;
 import androidx.annotation.Nullable;
 
 import com.ky.android.photo.util.ScreenUtils;
-import com.ky.android.photo.widget.photoview.PhotoView;
 
 
 /**
@@ -160,12 +159,9 @@ public class DragLayout extends LinearLayout {
     public void exitWithTranslation(float currentY) {
         if (currentY > 0) {
             ValueAnimator animDown = ValueAnimator.ofFloat(mTranslationY, getHeight());
-            animDown.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-                @Override
-                public void onAnimationUpdate(ValueAnimator animation) {
-                    float fraction = (float) animation.getAnimatedValue();
-                    DragLayout.this.setScrollY(-(int) fraction);
-                }
+            animDown.addUpdateListener(animation -> {
+                float fraction = (float) animation.getAnimatedValue();
+                DragLayout.this.setScrollY(-(int) fraction);
             });
             animDown.addListener(new Animator.AnimatorListener() {
                 @Override
@@ -190,12 +186,9 @@ public class DragLayout extends LinearLayout {
             animDown.start();
         } else {
             ValueAnimator animUp = ValueAnimator.ofFloat(mTranslationY, -getHeight());
-            animUp.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-                @Override
-                public void onAnimationUpdate(ValueAnimator animation) {
-                    float fraction = (float) animation.getAnimatedValue();
-                    DragLayout.this.setScrollY(-(int) fraction);
-                }
+            animUp.addUpdateListener(animation -> {
+                float fraction = (float) animation.getAnimatedValue();
+                DragLayout.this.setScrollY(-(int) fraction);
             });
             animUp.addListener(new Animator.AnimatorListener() {
                 @Override
@@ -226,42 +219,30 @@ public class DragLayout extends LinearLayout {
         ValueAnimator animatorScrollY = ValueAnimator.ofFloat(mTranslationY, 0);
         ValueAnimator animatorScaleX = ValueAnimator.ofFloat(scale, 1.0f);
         ValueAnimator animatorScaleY = ValueAnimator.ofFloat(scale, 1.0f);
-        animatorScaleX.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                float scaleX = (float) valueAnimator.getAnimatedValue();
-                dragFrameLayout.setScaleX(scaleX);
+        animatorScaleX.addUpdateListener(valueAnimator -> {
+            float scaleX = (float) valueAnimator.getAnimatedValue();
+            dragFrameLayout.setScaleX(scaleX);
+        });
+        animatorScaleY.addUpdateListener(valueAnimator -> {
+            float scaleY = (float) valueAnimator.getAnimatedValue();
+            dragFrameLayout.setScaleY(scaleY);
+            changeTransparent(mTranslationY);
+        });
+        animatorScrollX.addUpdateListener(valueAnimator -> {
+            if (isAnimateX) {
+                mTranslationX = (float) valueAnimator.getAnimatedValue();
+                mLastTranslationX = mTranslationX;
+                scale = Math.min(Math.max(1 - Math.abs(mTranslationX) / getHeight(), MAX_SCALE), 1);
+                DragLayout.this.setScrollX(-(int) mTranslationX);
+                dragFrameLayout.setScaleX(scale);
+                dragFrameLayout.setScaleY(scale);
             }
         });
-        animatorScaleY.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                float scaleY = (float) valueAnimator.getAnimatedValue();
-                dragFrameLayout.setScaleY(scaleY);
-                changeTransparent(mTranslationY);
-            }
-        });
-        animatorScrollX.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                if (isAnimateX) {
-                    mTranslationX = (float) valueAnimator.getAnimatedValue();
-                    mLastTranslationX = mTranslationX;
-                    scale = Math.min(Math.max(1 - Math.abs(mTranslationX) / getHeight(), MAX_SCALE), 1);
-                    DragLayout.this.setScrollX(-(int) mTranslationX);
-                    dragFrameLayout.setScaleX(scale);
-                    dragFrameLayout.setScaleY(scale);
-                }
-            }
-        });
-        animatorScrollY.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                if (isAnimateY) {
-                    mTranslationY = (float) valueAnimator.getAnimatedValue();
-                    mLastTranslationY = mTranslationY;
-                    DragLayout.this.setScrollY(-(int) mTranslationY);
-                }
+        animatorScrollY.addUpdateListener(valueAnimator -> {
+            if (isAnimateY) {
+                mTranslationY = (float) valueAnimator.getAnimatedValue();
+                mLastTranslationY = mTranslationY;
+                DragLayout.this.setScrollY(-(int) mTranslationY);
             }
         });
         animatorScrollY.addListener(new Animator.AnimatorListener() {

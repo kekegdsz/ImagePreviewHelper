@@ -40,6 +40,7 @@ class ImagePreviewActivity : AppCompatActivity() {
                     putParcelable("config", imageConfig?.originModel)
                     putString("url", models[index].url)
                     putInt("position", index)
+                    putString("thumb", models[index].thumb)
                 }
                 fragmentList?.add(imageFragment)
             } else if (type == ImageType.VIDEO) {
@@ -48,6 +49,7 @@ class ImagePreviewActivity : AppCompatActivity() {
                     putParcelable("config", imageConfig?.originModel)
                     putString("url", models[index].url)
                     putInt("position", index)
+                    putString("thumb", models[index].thumb)
                 }
                 fragmentList?.add(videoFragment)
             }
@@ -79,7 +81,6 @@ class ImagePreviewActivity : AppCompatActivity() {
 
     override fun finish() {
         super.finish()
-        
         overridePendingTransition(0, 0)
     }
 }
