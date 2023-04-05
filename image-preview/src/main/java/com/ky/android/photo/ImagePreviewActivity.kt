@@ -64,6 +64,7 @@ class ImagePreviewActivity : AppCompatActivity() {
         if (currentPosition != null) {
             _binding?.viewPager?.currentItem = currentPosition
         }
+        _binding?.ivLeftClose?.setOnClickListener { finish() }
     }
 
     companion object {
@@ -78,6 +79,7 @@ class ImagePreviewActivity : AppCompatActivity() {
 
     override fun finish() {
         super.finish()
+        
         overridePendingTransition(0, 0)
     }
 }

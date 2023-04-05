@@ -38,11 +38,14 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.MyViewHolder> 
         }
 
         String[] videos = new String[]{
-                "https://v6-chc.douyinvod.com/2728a216f4703acc3264b7584fc257fc/642c3a56/video/cn/mps/logo/r/p/v0200f470000bnj24h87q8i137v8k2t0/7b5a2ceef4b44a7eb391fe2e2b96b3b8/mp4/main.mp4?a=1128&ch=0&cr=0&dr=0&lr=aweme&cd=0%7C0%7C1%7C0&cv=1&br=0&bt=0&cs=0&ds=3&eid=1280&ft=beFhGIQQqUYqfJEZao0OW_EklpPiXB5GIMVJEtz9wrbPD-I&mime_type=video_mp4&qs=0&rc=OzY5ZWhoNDZoZDc3aGZkZUBpMzU7OjQ7Oms1cTMzOmkzM0BfXzYvL2M2XzQxX2NiLzI0YSNxaHMwZm41MWdfLS0xLS9zcw%3D%3D&btag=90000&definition=720p&item_id=6766133253981195527&l=202304042155038CE8B215A6537219A5E2&logo_type=aweme_search_suffix"
+                "https://aweme.snssdk.com/aweme/v1/play/?video_id=v0200f470000bnj24h87q8i137v8k2t0&line=0&ratio=540p&watermark=1&media_type=4&vr_type=0&improve_bitrate=0&logo_name=aweme",
+                "https://aweme.snssdk.com/aweme/v1/play/?video_id=v0200f120000bnj4u9egncodds6bjgm0&line=0&ratio=540p&watermark=1&media_type=4&vr_type=0&improve_bitrate=0&logo_name=aweme",
+
         };
 
         String[] videoImgs = new String[]{
-                "http://p9-dy.byteimg.com/large/tos-cn-p-0015/2e6b13b31a2a40b2aadaade01387584f_1575456802.jpeg?from=2563711402_large"
+                "http://p1-dy.byteimg.com/large/tos-cn-p-0015/d6addaee76f3495d840d6dff8d2216e0_1575363173.jpeg?from=2563711402_large",
+                "http://p3-dy.byteimg.com/large/tos-cn-p-0015/818d1fad6be3458e940dcd4b5e3bdaf9_1575374652.jpeg?from=2563711402_large"
         };
 
         for (int i = 0; i < videos.length; i++) {
