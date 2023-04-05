@@ -2,6 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.ky.android.photo">
 
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application>
@@ -10,6 +11,7 @@
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:theme="@style/Transparent"
             android:exported="false" />
+
     </application>
 
 </manifest>

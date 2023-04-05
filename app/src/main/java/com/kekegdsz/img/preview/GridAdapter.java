@@ -30,6 +30,7 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.MyViewHolder> 
                 "https://img2.baidu.com/it/u=5127007,3812041565&fm=253&fmt=auto&app=138&f=JPEG?w=800&h=500",
                 "https://img0.baidu.com/it/u=701341020,2312900489&fm=253&fmt=auto&app=120&f=JPEG?w=1280&h=800",
                 "https://img2.baidu.com/it/u=5127007,3812041565&fm=253&fmt=auto&app=138&f=JPEG?w=800&h=500",
+                "https://n.sinaimg.cn/translate/1/w720h3281/20180727/MkXW-hfvkitx9233745.jpg",
         };
         for (String url : normalImageUlrs) {
             ImageModel imageModel = new ImageModel(url, url, ImageType.IMAGE);

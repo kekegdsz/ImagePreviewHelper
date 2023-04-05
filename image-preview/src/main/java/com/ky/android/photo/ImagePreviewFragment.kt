@@ -22,7 +22,7 @@ import com.ky.android.photo.databinding.FragmentImagePreviewBinding
 open class ImagePreviewFragment : Fragment() {
     private lateinit var _binding: FragmentImagePreviewBinding
     private var url: String? = null
-    private var position: Int? = null
+    private var showAnim: Boolean = false
     private var originModel: ContentViewOriginModel? = null
 
     //X、Y的移动距离
@@ -64,7 +64,7 @@ open class ImagePreviewFragment : Fragment() {
             activity?.finish()
         }
         _binding.photoView.setOnClickListener {
-            exitAnimation{
+            exitAnimation {
                 activity?.finish()
             }
         }
@@ -74,7 +74,8 @@ open class ImagePreviewFragment : Fragment() {
 
         //设置背景色，后面需要为其设置渐变动画
         //设置背景色，后面需要为其设置渐变动画
-        colorDrawable = activity?.let { ContextCompat.getColor(it, android.R.color.black) }?.let { ColorDrawable(it) }
+        colorDrawable = activity?.let { ContextCompat.getColor(it, android.R.color.black) }
+            ?.let { ColorDrawable(it) }
         _binding.dragLayout.background = colorDrawable;
         val viewTreeObserver = _binding.photoView.viewTreeObserver
         viewTreeObserver.addOnPreDrawListener(object : ViewTreeObserver.OnPreDrawListener {
@@ -101,6 +102,9 @@ open class ImagePreviewFragment : Fragment() {
 
     @SuppressLint("ObjectAnimatorBinding")
     private fun enterAnimation(enterAction: Runnable) {
+        if (!showAnim) {
+            return
+        }
         //放大动画
         _binding.photoView.pivotX = 0F
         _binding.photoView.pivotY = 0F
@@ -120,6 +124,9 @@ open class ImagePreviewFragment : Fragment() {
 
     @SuppressLint("ObjectAnimatorBinding")
     private fun exitAnimation(endAction: Runnable) {
+        if (!showAnim) {
+            return
+        }
         //缩小动画
         _binding.photoView.pivotX = 0F
         _binding.photoView.pivotY = 0F
@@ -147,7 +154,7 @@ open class ImagePreviewFragment : Fragment() {
 
     private fun initIntent() {
         originModel = arguments?.getParcelable("config")
-        position = arguments?.getInt("position")
+        showAnim = arguments?.getBoolean("showAnim") == true
         url = arguments?.getString("url")
     }
 

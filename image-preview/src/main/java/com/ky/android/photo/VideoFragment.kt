@@ -31,7 +31,7 @@ open class VideoFragment : Fragment() {
 
     private var url: String? = null
     private var thumb: String? = null
-    private var position: Int? = null
+    private var showAnim: Boolean = false
     private var originModel: ContentViewOriginModel? = null
     private var isLoad = false;
 
@@ -43,8 +43,10 @@ open class VideoFragment : Fragment() {
     private var mWidthScale: Float? = 0f
     private var mHeightScale: Float? = 0f
     private val DURATION = 250
+
     //背景色
     private var colorDrawable: ColorDrawable? = null
+
     companion object {
         fun newInstance() = VideoFragment()
     }
@@ -121,7 +123,7 @@ open class VideoFragment : Fragment() {
 
     private fun initIntent() {
         originModel = arguments?.getParcelable("config")
-        position = arguments?.getInt("position")
+        showAnim = arguments?.getBoolean("showAnim") == true
         url = arguments?.getString("url")
         thumb = arguments?.getString("thumb")
     }
@@ -175,6 +177,9 @@ open class VideoFragment : Fragment() {
 
     @SuppressLint("ObjectAnimatorBinding")
     private fun enterAnimation(enterAction: Runnable) {
+        if (!showAnim) {
+            return
+        }
         //放大动画
         _binding.player.pivotX = 0F
         _binding.player.pivotY = 0F
@@ -194,6 +199,9 @@ open class VideoFragment : Fragment() {
 
     @SuppressLint("ObjectAnimatorBinding")
     private fun exitAnimation(endAction: Runnable) {
+        if (!showAnim) {
+            return
+        }
         //缩小动画
         _binding.player.pivotX = 0F
         _binding.player.pivotY = 0F

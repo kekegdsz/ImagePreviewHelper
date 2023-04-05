@@ -58,4 +58,19 @@ dependencies {
 
     // 可选，包含StandardVideoController的实现
     implementation 'xyz.doikki.android.dkplayer:dkplayer-ui:3.3.7'
+
+    implementation 'me.panpf:sketch-gif:2.6.2-b1'
+    implementation 'me.panpf:sketch:2.6.2-b1'
+
+    implementation 'com.github.tbruyelle:rxpermissions:0.12'
+    implementation 'io.reactivex.rxjava3:rxjava:3.0.4'
+
+    // core
+    implementation 'com.liulishuo.okdownload:okdownload:1.0.7'
+    // provide sqlite to store breakpoints
+    implementation 'com.liulishuo.okdownload:sqlite:1.0.7'
+    // provide okhttp to connect to backend
+    implementation 'com.liulishuo.okdownload:okhttp:1.0.7'
+    implementation 'com.squareup.okhttp3:okhttp:3.10.0'
+    implementation 'com.liulishuo.okdownload:ktx:1.0.7'
 }
