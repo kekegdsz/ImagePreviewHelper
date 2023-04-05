@@ -28,7 +28,7 @@ public class DragLayout extends LinearLayout {
     private final static int MAX_EXIT_Y = 500;
     private final static float MAX_SCALE = 0.25f;
     private final static long DURATION = 200;
-    private PhotoView photoView;
+    private DragFrameLayout dragFrameLayout;
     private float mDownY;
     private float mTranslationX;
     private float mTranslationY;
@@ -67,7 +67,7 @@ public class DragLayout extends LinearLayout {
     @Override
     protected void onFinishInflate() {
         super.onFinishInflate();
-        photoView = (PhotoView) getChildAt(0);
+        dragFrameLayout = (DragFrameLayout) getChildAt(0);
     }
 
     @Override
@@ -79,11 +79,11 @@ public class DragLayout extends LinearLayout {
                 mDownY = ev.getRawY();
                 break;
             case MotionEvent.ACTION_MOVE:
-                if (photoView != null && photoView.getVisibility() == View.VISIBLE) {
-                    Log.d(TAG, "photoView.getMaxTouchCount()=" + photoView.getMaxTouchCount());
-                    Log.d("asd","photoView.getScaleX()="+photoView.getScaleX()+";photoView.getScale()="+photoView.getScale());
-                    isIntercept = (photoView.getScale() <= (photoView.getMinimumScale() + 0.001F))
-                            && (photoView.getMaxTouchCount() == 0 || photoView.getMaxTouchCount() == 1)
+                if (dragFrameLayout != null && dragFrameLayout.getVisibility() == View.VISIBLE) {
+                    Log.d(TAG, "photoView.getMaxTouchCount()=" + dragFrameLayout.getMaxTouchCount());
+                    Log.d("asd","photoView.getScaleX()="+dragFrameLayout.getScaleX()+";photoView.getScale()="+dragFrameLayout.getScale());
+                    isIntercept = (dragFrameLayout.getScale() <= (dragFrameLayout.getMinimumScale() + 0.001F))
+                            && (dragFrameLayout.getMaxTouchCount() == 0 || dragFrameLayout.getMaxTouchCount() == 1)
                             && Math.abs(ev.getRawY() - mDownY) > 2 * mTouchslop;
                 }
                 break;
@@ -122,14 +122,14 @@ public class DragLayout extends LinearLayout {
                     if (downY - upY > mTouchslop) {
                         Log.d(TAG, "向上滑动");
                     } else if (upY - downY > mTouchslop) {
-                        if (photoView.getMaxTouchCount() == 0 || photoView.getMaxTouchCount() == 1) {
+                        if (dragFrameLayout.getMaxTouchCount() == 0 || dragFrameLayout.getMaxTouchCount() == 1) {
                             isFinsh = true;
                             Log.d(TAG, "向下滑动");
                         }
                     }
                 }
                 if (isFinsh) onOneFingerPanActionMove(event, moveX, moveY);
-                Log.d(TAG, "photoImage.getMaxTouchCount()=" + photoView.getMaxTouchCount());
+                Log.d(TAG, "photoImage.getMaxTouchCount()=" + dragFrameLayout.getMaxTouchCount());
                 return false;
         }
         return true;
@@ -143,8 +143,8 @@ public class DragLayout extends LinearLayout {
         Log.d(TAG, "mLastTranslationX=" + mLastTranslationX + ";mLastTranslationY=" + mLastTranslationY);
         // 触发回调，根据距离处理其他控件的透明度等等
         changeTransparent(mTranslationY);
-        photoView.setScaleX(scale);
-        photoView.setScaleY(scale);
+        dragFrameLayout.setScaleX(scale);
+        dragFrameLayout.setScaleY(scale);
         this.setScrollX(-(int) deltaX);
         this.setScrollY(-(int) deltaY);
     }
@@ -230,14 +230,14 @@ public class DragLayout extends LinearLayout {
             @Override
             public void onAnimationUpdate(ValueAnimator valueAnimator) {
                 float scaleX = (float) valueAnimator.getAnimatedValue();
-                photoView.setScaleX(scaleX);
+                dragFrameLayout.setScaleX(scaleX);
             }
         });
         animatorScaleY.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator valueAnimator) {
                 float scaleY = (float) valueAnimator.getAnimatedValue();
-                photoView.setScaleY(scaleY);
+                dragFrameLayout.setScaleY(scaleY);
                 changeTransparent(mTranslationY);
             }
         });
@@ -249,8 +249,8 @@ public class DragLayout extends LinearLayout {
                     mLastTranslationX = mTranslationX;
                     scale = Math.min(Math.max(1 - Math.abs(mTranslationX) / getHeight(), MAX_SCALE), 1);
                     DragLayout.this.setScrollX(-(int) mTranslationX);
-                    photoView.setScaleX(scale);
-                    photoView.setScaleY(scale);
+                    dragFrameLayout.setScaleX(scale);
+                    dragFrameLayout.setScaleY(scale);
                 }
             }
         });

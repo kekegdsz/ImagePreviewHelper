@@ -35,11 +35,11 @@ open class ImagePreviewFragment : Fragment() {
     }
 
     private fun initViews() {
-        _binding.imageDetailFinger.setOnAlphaChangeListener {
+        _binding.dragLayout.setOnAlphaChangeListener {
             val colorId = convertPercentToBlackAlphaColor(it)
-            _binding.imageDetailFinger.setBackgroundColor(colorId)
+            _binding.dragLayout.setBackgroundColor(colorId)
         }
-        _binding.imageDetailFinger.setOnPageFinishListener {
+        _binding.dragLayout.setOnPageFinishListener {
             activity?.finish()
         }
         _binding.photoView.setOnClickListener {
@@ -56,10 +56,6 @@ open class ImagePreviewFragment : Fragment() {
         val stringAlpha = Integer.toHexString(intAlpha).toLowerCase()
         val color = "#" + (if (stringAlpha.length < 2) "0" else "") + stringAlpha + "000000"
         return Color.parseColor(color)
-    }
-
-    private fun isVisibleToUser(): Boolean {
-        return isResumed && userVisibleHint
     }
 
     private fun initIntent() {

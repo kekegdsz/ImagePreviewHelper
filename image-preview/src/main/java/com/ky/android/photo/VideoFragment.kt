@@ -1,5 +1,6 @@
 package com.ky.android.photo
 
+import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -38,12 +39,28 @@ open class VideoFragment : Fragment() {
     }
 
     private fun initViews() {
+        _binding.dragLayout.setOnAlphaChangeListener {
+            val colorId = convertPercentToBlackAlphaColor(it)
+            _binding.dragLayout.setBackgroundColor(colorId)
+        }
+        _binding.dragLayout.setOnPageFinishListener {
+            activity?.finish()
+        }
+
         val cacheServer: HttpProxyCacheServer = ProxyVideoCacheManager.getProxy(activity)
         val proxyUrl = cacheServer.getProxyUrl(url)
         _binding.player.setUrl(proxyUrl) //设置视频地址
         val controller = context?.let { StandardVideoController(it) }
         controller?.addDefaultControlComponent("标题", false)
         _binding.player.setVideoController(controller) //设置控制器
+    }
+
+    private fun convertPercentToBlackAlphaColor(alpha: Float): Int {
+        var percent = Math.min(1f, Math.max(0f, alpha))
+        val intAlpha = (percent * 255).toInt()
+        val stringAlpha = Integer.toHexString(intAlpha).toLowerCase()
+        val color = "#" + (if (stringAlpha.length < 2) "0" else "") + stringAlpha + "000000"
+        return Color.parseColor(color)
     }
 
     private fun isVisibleToUser(): Boolean {
